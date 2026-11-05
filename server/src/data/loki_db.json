@@ -1,0 +1,1382 @@
+{
+  "categories": [
+    {
+      "id": "cat_plumbing",
+      "name": "Plumbing Services",
+      "icon": "wrench",
+      "color": "#2563EB",
+      "description": "Pipe leakages, tap repairs, motor installation & fittings",
+      "servicesCount": 8,
+      "active": true,
+      "requiredDocuments": [
+        "aadhaar",
+        "tools_photo"
+      ],
+      "subCategories": [
+        {
+          "id": "sub_tap_repair",
+          "name": "Taps, Shower & Valves",
+          "description": "Fix leaks, new fittings, washbasin pipe fix",
+          "hasChildCategories": false,
+          "basePrice": 199,
+          "duration": "30 mins",
+          "childCategories": []
+        },
+        {
+          "id": "sub_tank_service",
+          "name": "Water Tank & Pump Motors",
+          "description": "Underground sump, overhead tank & motor servicing",
+          "hasChildCategories": true,
+          "childCategories": [
+            {
+              "id": "ch_tank_clean",
+              "name": "Overhead Tank 5-Stage Chemical Wash",
+              "basePrice": 699,
+              "duration": "90 mins",
+              "description": "High pressure mud suction & UV disinfection"
+            },
+            {
+              "id": "ch_motor_install",
+              "name": "Submersible Pump Installation",
+              "basePrice": 499,
+              "duration": "60 mins",
+              "description": "Starter box connection & pipeline wiring"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat_electrical",
+      "name": "Electricians",
+      "icon": "zap",
+      "color": "#F59E0B",
+      "description": "Short circuits, wiring, switchboard, fan & inverter works",
+      "servicesCount": 10,
+      "active": true,
+      "requiredDocuments": [
+        "aadhaar",
+        "wireman_license"
+      ],
+      "subCategories": [
+        {
+          "id": "sub_wiring",
+          "name": "Switchboard & Short Circuits",
+          "description": "MCB tripping, internal wall short circuits, new points",
+          "hasChildCategories": false,
+          "basePrice": 149,
+          "duration": "25 mins",
+          "childCategories": []
+        },
+        {
+          "id": "sub_fan_inverter",
+          "name": "Fans & Inverter Setup",
+          "description": "Ceiling fans, exhaust fans & backup inverter wiring",
+          "hasChildCategories": true,
+          "childCategories": [
+            {
+              "id": "ch_ceiling_fan",
+              "name": "Ceiling Fan Installation / Rewind",
+              "basePrice": 249,
+              "duration": "30 mins",
+              "description": "Regulator & capacitor replacement"
+            },
+            {
+              "id": "ch_inverter",
+              "name": "Heavy Duty Inverter Setup",
+              "basePrice": 599,
+              "duration": "60 mins",
+              "description": "Dual battery rack wiring & load balance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat_delivery",
+      "name": "Instant Delivery",
+      "icon": "package",
+      "color": "#10B981",
+      "description": "Pickup & drop documents, packages, medicine & goods within 30 mins",
+      "servicesCount": 4,
+      "active": true,
+      "requiredDocuments": [
+        "aadhaar",
+        "driving_license",
+        "vehicle_rc"
+      ],
+      "subCategories": [
+        {
+          "id": "sub_quick_courier",
+          "name": "30-Min Instant Courier",
+          "description": "Keys, documents, lunchbox & small parcels up to 5kg",
+          "hasChildCategories": false,
+          "basePrice": 49,
+          "duration": "30 mins",
+          "childCategories": []
+        },
+        {
+          "id": "sub_heavy_parcel",
+          "name": "Large Box & Cargo Drop",
+          "description": "Medium boxes up to 15kg with backpack carrier",
+          "hasChildCategories": false,
+          "basePrice": 120,
+          "duration": "45 mins",
+          "childCategories": []
+        }
+      ]
+    },
+    {
+      "id": "cat_mechanic",
+      "name": "Mechanics (Bike & Car)",
+      "icon": "tool",
+      "color": "#EF4444",
+      "description": "Breakdown support, tyre puncture, battery jumpstart, servicing",
+      "servicesCount": 6,
+      "active": true,
+      "requiredDocuments": [
+        "aadhaar",
+        "mechanic_cert"
+      ],
+      "subCategories": [
+        {
+          "id": "sub_bike_repair",
+          "name": "Two-Wheeler Breakdown & Service",
+          "description": "On-spot bike & scooter doorstep service",
+          "hasChildCategories": true,
+          "childCategories": [
+            {
+              "id": "ch_puncture",
+              "name": "Doorstep Tubeless Puncture Fix",
+              "basePrice": 99,
+              "duration": "20 mins",
+              "description": "Includes air top-up & sealant check"
+            },
+            {
+              "id": "ch_bike_service",
+              "name": "General Periodic Oil & Brake Service",
+              "basePrice": 399,
+              "duration": "45 mins",
+              "description": "Chain lubing, spark plug clean, clutch adjust"
+            }
+          ]
+        },
+        {
+          "id": "sub_car_repair",
+          "name": "Four-Wheeler Emergency",
+          "description": "Battery jumpstart & car breakdown diagnostic",
+          "hasChildCategories": false,
+          "basePrice": 399,
+          "duration": "30 mins",
+          "childCategories": []
+        }
+      ]
+    },
+    {
+      "id": "cat_shops",
+      "name": "Local Shops & Kirana",
+      "icon": "shopping-bag",
+      "color": "#8B5CF6",
+      "description": "Groceries, fresh vegetables, daily essentials from nearby stores",
+      "servicesCount": 15,
+      "active": true,
+      "requiredDocuments": [
+        "aadhaar",
+        "shop_license_fssai"
+      ],
+      "subCategories": [
+        {
+          "id": "sub_kirana",
+          "name": "Daily Essentials & Groceries",
+          "description": "Fresh milk, provisions, atta, dal & staples",
+          "hasChildCategories": false,
+          "basePrice": 30,
+          "duration": "20 mins",
+          "childCategories": []
+        }
+      ]
+    },
+    {
+      "id": "cat_cleaning",
+      "name": "Deep Cleaning & Pest Control",
+      "icon": "sparkles",
+      "color": "#06B6D4",
+      "description": "Full home cleaning, sofa/carpet wash, kitchen & bathroom shine",
+      "servicesCount": 5,
+      "active": true,
+      "requiredDocuments": [
+        "aadhaar"
+      ],
+      "subCategories": [
+        {
+          "id": "sub_home_deep",
+          "name": "Home Deep Cleaning",
+          "description": "Intense chemical scrub, kitchen grease removal",
+          "hasChildCategories": true,
+          "childCategories": [
+            {
+              "id": "ch_1bhk",
+              "name": "1 BHK Complete Home Shine",
+              "basePrice": 1499,
+              "duration": "3-4 hours",
+              "description": "Floor single-disc machine polish & bathroom descaling"
+            },
+            {
+              "id": "ch_bath",
+              "name": "Intense Bathroom Tile Scrub",
+              "basePrice": 499,
+              "duration": "60 mins",
+              "description": "Hard water stain removal & sanitization"
+            }
+          ]
+        },
+        {
+          "id": "sub_pest",
+          "name": "Cockroach & Bug Pest Control",
+          "description": "Odorless herbal gel & spray treatment",
+          "hasChildCategories": false,
+          "basePrice": 799,
+          "duration": "60 mins",
+          "childCategories": []
+        }
+      ]
+    },
+    {
+      "id": "cat_appliances",
+      "name": "Appliance Repairs",
+      "icon": "tv",
+      "color": "#EC4899",
+      "description": "AC service & gas refill, refrigerator, washing machine, microwave",
+      "servicesCount": 7,
+      "active": true,
+      "requiredDocuments": [
+        "aadhaar",
+        "trade_certificate"
+      ],
+      "subCategories": [
+        {
+          "id": "sub_ac",
+          "name": "Air Conditioner (AC)",
+          "description": "Split, Window, Cassette AC repairs and maintenance",
+          "hasChildCategories": true,
+          "childCategories": [
+            {
+              "id": "ch_split_ac",
+              "name": "Split AC Deep Foam Jet Service",
+              "basePrice": 499,
+              "duration": "45 mins",
+              "description": "2X cooling booster coil pressure wash"
+            },
+            {
+              "id": "ch_window_ac",
+              "name": "Window AC Full Servicing",
+              "basePrice": 399,
+              "duration": "30 mins",
+              "description": "Filter cleaning, chemical spray & coil wash"
+            },
+            {
+              "id": "ch_gas_refill",
+              "name": "AC Gas Refill & Leak Fix",
+              "basePrice": 1499,
+              "duration": "60 mins",
+              "description": "R32/R410 refrigerant filling with pressure test"
+            }
+          ]
+        },
+        {
+          "id": "sub_fridge",
+          "name": "Refrigerator Repair",
+          "description": "Single door, double door & inverter fridge cooling issues",
+          "hasChildCategories": false,
+          "basePrice": 299,
+          "duration": "40 mins",
+          "childCategories": []
+        },
+        {
+          "id": "sub_washing",
+          "name": "Washing Machine",
+          "description": "Top load, front load & semi-automatic machines",
+          "hasChildCategories": true,
+          "childCategories": [
+            {
+              "id": "ch_front_load",
+              "name": "Front Load Drum & Motor Wash",
+              "basePrice": 449,
+              "duration": "50 mins",
+              "description": "Deep spin vibration & drum cleaning"
+            },
+            {
+              "id": "ch_top_load",
+              "name": "Top Load Pulsator Repair",
+              "basePrice": 349,
+              "duration": "40 mins",
+              "description": "Drain valve & belt replacement"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat_ab5c5cd1",
+      "name": "Lease & Rental",
+      "icon": "apartment",
+      "color": "#F97316",
+      "description": "Houses, apartments, shops & commercial spaces for lease and rent",
+      "requiredDocuments": [
+        "aadhaar"
+      ],
+      "subCategories": [
+        {
+          "id": "sub_res_rent",
+          "name": "Residential Rental",
+          "description": "Flats, independent houses, villas for rent",
+          "hasChildCategories": false,
+          "basePrice": 499,
+          "duration": "1-2 days",
+          "childCategories": []
+        },
+        {
+          "id": "sub_comm_lease",
+          "name": "Commercial Lease",
+          "description": "Shops, offices, warehouses for lease",
+          "hasChildCategories": false,
+          "basePrice": 999,
+          "duration": "2-3 days",
+          "childCategories": []
+        }
+      ],
+      "servicesCount": 2,
+      "active": true
+    },
+    {
+      "id": "cat_bd22116b",
+      "name": "Cable Technicians",
+      "icon": "wifi",
+      "color": "#3B82F6",
+      "description": "WiFi router setup, cable TV, optical fiber & broadband repairs",
+      "requiredDocuments": [
+        "aadhaar"
+      ],
+      "subCategories": [
+        {
+          "id": "sub_1831a553",
+          "name": "tv",
+          "description": "",
+          "hasChildCategories": true,
+          "basePrice": null,
+          "duration": null,
+          "childCategories": [
+            {
+              "id": "ch_fcf84cb3",
+              "name": "inter net",
+              "basePrice": 299,
+              "duration": "30 mins",
+              "description": ""
+            }
+          ]
+        }
+      ],
+      "servicesCount": 0,
+      "active": true
+    }
+  ],
+  "services": [
+    {
+      "id": "srv_1",
+      "categoryId": "cat_plumbing",
+      "name": "Tap & Shower Repair / Replacement",
+      "basePrice": 199,
+      "duration": "30-45 mins",
+      "description": "Fix leaking taps, new bib cock installation, shower head fixing",
+      "rating": 4.8,
+      "totalBookings": 245
+    },
+    {
+      "id": "srv_2",
+      "categoryId": "cat_plumbing",
+      "name": "Water Tank Cleaning & Motor Fitting",
+      "basePrice": 699,
+      "duration": "1-2 hours",
+      "description": "Comprehensive 5-stage mechanical cleaning and motor connection check",
+      "rating": 4.9,
+      "totalBookings": 180
+    },
+    {
+      "id": "srv_3",
+      "categoryId": "cat_electrical",
+      "name": "Fan Installation / Repair",
+      "basePrice": 149,
+      "duration": "20-30 mins",
+      "description": "Ceiling fan hanging, regulator change, capacitor replacement",
+      "rating": 4.9,
+      "totalBookings": 512
+    },
+    {
+      "id": "srv_4",
+      "categoryId": "cat_electrical",
+      "name": "Complete Home Inspection / Short Circuit Fix",
+      "basePrice": 349,
+      "duration": "45-60 mins",
+      "description": "MCB tripping, burning smell check, phase balancing",
+      "rating": 4.7,
+      "totalBookings": 310
+    },
+    {
+      "id": "srv_5",
+      "categoryId": "cat_delivery",
+      "name": "Hyperlocal Express Parcel Drop",
+      "basePrice": 49,
+      "duration": "15-30 mins",
+      "description": "Pickup from any address and deliver instantly within 10 km",
+      "rating": 4.9,
+      "totalBookings": 1420
+    },
+    {
+      "id": "srv_6",
+      "categoryId": "cat_mechanic",
+      "name": "On-Spot Bike Breakdown & Puncture Repair",
+      "basePrice": 199,
+      "duration": "20-40 mins",
+      "description": "Emergency mechanic reaches your spot for puncture, chain slip or plug issue",
+      "rating": 4.8,
+      "totalBookings": 430
+    },
+    {
+      "id": "srv_7",
+      "categoryId": "cat_mechanic",
+      "name": "Car Battery Jumpstart & Diagnostic",
+      "basePrice": 399,
+      "duration": "30 mins",
+      "description": "Heavy duty jump cables, battery health test, alternator check",
+      "rating": 4.9,
+      "totalBookings": 289
+    },
+    {
+      "id": "srv_8",
+      "categoryId": "cat_appliances",
+      "name": "AC Deep Foam Jet Service",
+      "basePrice": 499,
+      "duration": "45 mins",
+      "description": "2X cooling booster, indoor & outdoor unit coil pressure washing",
+      "rating": 4.9,
+      "totalBookings": 890
+    },
+    {
+      "id": "srv_lease_1",
+      "categoryId": "cat_ab5c5cd1",
+      "name": "House & Flat Rental Agreement / Search",
+      "basePrice": 499,
+      "duration": "1-2 days",
+      "description": "Verified residential listings, tenant background verification & rental agreement drafting",
+      "rating": 4.8,
+      "totalBookings": 120
+    },
+    {
+      "id": "srv_lease_2",
+      "categoryId": "cat_ab5c5cd1",
+      "name": "Commercial Space & Shop Lease Assistance",
+      "basePrice": 999,
+      "duration": "2-3 days",
+      "description": "Commercial space inspection, owner direct deal & registered lease deed assistance",
+      "rating": 4.9,
+      "totalBookings": 75
+    }
+  ],
+  "users": [
+    {
+      "id": "usr_admin_1",
+      "name": "Super Admin",
+      "email": "admin@loki.com",
+      "phone": "+91 98765 00001",
+      "passwordHash": "$2a$10$MptCrf9UyRLHl86cI6voz.TWDD8A.0/r5AeA8w4Hzf0s7emKuhtT6",
+      "role": "admin",
+      "createdAt": "2026-11-02T05:37:25.343Z"
+    },
+    {
+      "id": "usr_cust_1",
+      "name": "Prasad (Customer)",
+      "email": "customer@loki.com",
+      "phone": "+91 98765 11111",
+      "passwordHash": "$2a$10$MptCrf9UyRLHl86cI6voz.Dtk9U3PHp0dcbNTxT6EFXpPBhNvxnKm",
+      "role": "customer",
+      "address": "Flat 402, Green Meadows, Hyderabad",
+      "coordinates": {
+        "lat": 17.4435,
+        "lng": 78.3772
+      },
+      "walletBalance": 750,
+      "createdAt": "2026-11-02T05:37:25.402Z"
+    },
+    {
+      "id": "usr_cust_2",
+      "name": "Sneha Reddy",
+      "email": "sneha.reddy@gmail.com",
+      "phone": "+91 98480 12345",
+      "role": "customer",
+      "address": "Plot 42, Pillar 143, Attapur, Hyderabad",
+      "district": "Rangareddy",
+      "mandal": "Rajendranagar",
+      "village": "Attapur",
+      "walletBalance": 1200,
+      "totalBookings": 8,
+      "status": "active",
+      "createdAt": "2026-10-15T10:30:00.000Z"
+    },
+    {
+      "id": "usr_cust_3",
+      "name": "Vikram Varma",
+      "email": "vikram.varma@outlook.com",
+      "phone": "+91 94401 98765",
+      "role": "customer",
+      "address": "Road No. 4, KPHB Phase 1, Hyderabad",
+      "district": "Medchal-Malkajgiri",
+      "mandal": "Kukatpally",
+      "village": "KPHB Colony",
+      "walletBalance": 450,
+      "totalBookings": 14,
+      "status": "active",
+      "createdAt": "2026-09-20T14:15:00.000Z"
+    },
+    {
+      "id": "usr_cust_4",
+      "name": "Priya Sharma",
+      "email": "priya.sharma@yahoo.com",
+      "phone": "+91 97000 55443",
+      "role": "customer",
+      "address": "Villa 18, Road No. 12, Banjara Hills",
+      "district": "Hyderabad",
+      "mandal": "Khairatabad",
+      "village": "Banjara Hills",
+      "walletBalance": 2100,
+      "totalBookings": 19,
+      "status": "active",
+      "createdAt": "2026-08-05T09:00:00.000Z"
+    },
+    {
+      "id": "usr_cust_5",
+      "name": "Ravi Teja",
+      "email": "raviteja.b@gmail.com",
+      "phone": "+91 98855 67890",
+      "role": "customer",
+      "address": "Near ORR Toll, Narsingi",
+      "district": "Rangareddy",
+      "mandal": "Rajendranagar",
+      "village": "Narsingi",
+      "walletBalance": 300,
+      "totalBookings": 3,
+      "status": "active",
+      "createdAt": "2026-10-28T16:45:00.000Z"
+    },
+    {
+      "id": "usr_2ce6bb2e",
+      "name": "Test User",
+      "email": "test@loki.com",
+      "phone": "9876599999",
+      "passwordHash": "$2a$10$j2TU59g.5lIkZR7WcEbzTeqPsyrLoeo2vaRTduoH1RzymdVl/SBEy",
+      "role": "customer",
+      "address": "Madhapur, Hyderabad",
+      "coordinates": {
+        "lat": 17.4435,
+        "lng": 78.3772
+      },
+      "walletBalance": 200,
+      "createdAt": "2026-11-05T05:50:38.034Z"
+    }
+  ],
+  "providers": [
+    {
+      "id": "prv_1",
+      "name": "Ramesh Kumar",
+      "email": "ramesh@loki.com",
+      "phone": "+91 98765 22222",
+      "passwordHash": "$2a$10$MptCrf9UyRLHl86cI6voz.AGgSF2LEA30RbO1iy..nMCHivDGCIli",
+      "role": "provider",
+      "category": "cat_plumbing",
+      "serviceName": "Master Plumber",
+      "rating": 4.85,
+      "jobsCompleted": 313,
+      "isOnline": true,
+      "kycStatus": "approved",
+      "aadhaarNumber": "XXXX-XXXX-9821",
+      "currentLocation": {
+        "lat": 17.448,
+        "lng": 78.374
+      },
+      "walletBalance": 4429,
+      "createdAt": "2026-11-02T05:37:25.460Z",
+      "isProfileComplete": true,
+      "cancelledJobs": 2,
+      "leadsReceived": 315
+    },
+    {
+      "id": "prv_2",
+      "name": "Suresh Babu",
+      "email": "suresh@loki.com",
+      "phone": "+91 98765 33333",
+      "passwordHash": "$2a$10$MptCrf9UyRLHl86cI6voz.AGgSF2LEA30RbO1iy..nMCHivDGCIli",
+      "role": "provider",
+      "category": "cat_electrical",
+      "serviceName": "Certified Wireman",
+      "rating": 4.92,
+      "jobsCompleted": 450,
+      "isOnline": true,
+      "kycStatus": "approved",
+      "aadhaarNumber": "XXXX-XXXX-4512",
+      "currentLocation": {
+        "lat": 17.441,
+        "lng": 78.382
+      },
+      "walletBalance": 6180,
+      "createdAt": "2026-11-02T05:37:25.518Z",
+      "isProfileComplete": true
+    },
+    {
+      "id": "prv_3",
+      "name": "Rajesh Varma",
+      "email": "rajesh@loki.com",
+      "phone": "+91 98765 44444",
+      "passwordHash": "$2a$10$MptCrf9UyRLHl86cI6voz.AGgSF2LEA30RbO1iy..nMCHivDGCIli",
+      "role": "provider",
+      "category": "cat_delivery",
+      "serviceName": "Hyperlocal Rider",
+      "rating": 4.88,
+      "jobsCompleted": 980,
+      "isOnline": true,
+      "kycStatus": "approved",
+      "vehicleNumber": "TS 09 EA 4521",
+      "currentLocation": {
+        "lat": 17.4455,
+        "lng": 78.376
+      },
+      "walletBalance": 2840,
+      "createdAt": "2026-11-02T05:37:25.577Z",
+      "isProfileComplete": true
+    },
+    {
+      "id": "prv_4",
+      "name": "Anitha Rao",
+      "email": "anitha@loki.com",
+      "phone": "+91 98765 55555",
+      "passwordHash": "$2a$10$MptCrf9UyRLHl86cI6voz.AGgSF2LEA30RbO1iy..nMCHivDGCIli",
+      "role": "provider",
+      "category": "cat_cleaning",
+      "serviceName": "Pro Housekeeping & Sanitizer",
+      "rating": 0,
+      "jobsCompleted": 0,
+      "isOnline": false,
+      "kycStatus": "pending",
+      "aadhaarNumber": "XXXX-XXXX-6710",
+      "currentLocation": {
+        "lat": 17.452,
+        "lng": 78.369
+      },
+      "walletBalance": 0,
+      "createdAt": "2026-11-02T05:37:25.635Z"
+    },
+    {
+      "id": "prv_5",
+      "name": "Shiva Kumar",
+      "email": "shiva.mechanic@loki.com",
+      "phone": "+91 98765 66666",
+      "role": "provider",
+      "category": "cat_mechanic",
+      "serviceName": "24/7 Bike & Car Doctor",
+      "rating": 4.95,
+      "jobsCompleted": 620,
+      "isOnline": true,
+      "kycStatus": "approved",
+      "aadhaarNumber": "XXXX-XXXX-3341",
+      "district": "Hyderabad",
+      "mandal": "Serilingampally",
+      "village": "Gachibowli",
+      "walletBalance": 5800,
+      "createdAt": "2026-09-10T11:00:00.000Z",
+      "isProfileComplete": true
+    },
+    {
+      "id": "prv_6",
+      "name": "K. Venkatesh",
+      "email": "venkatesh.ac@loki.com",
+      "phone": "+91 98765 77777",
+      "role": "provider",
+      "category": "cat_appliances",
+      "serviceName": "AC & Cooling Specialist",
+      "rating": 4.89,
+      "jobsCompleted": 410,
+      "isOnline": false,
+      "kycStatus": "approved",
+      "aadhaarNumber": "XXXX-XXXX-8920",
+      "district": "Medchal-Malkajgiri",
+      "mandal": "Kukatpally",
+      "village": "Nizampet",
+      "walletBalance": 3450,
+      "createdAt": "2026-09-18T15:20:00.000Z",
+      "isProfileComplete": true
+    },
+    {
+      "id": "prv_85b67445",
+      "name": "dasdma",
+      "email": "9010737882@partner.loki",
+      "phone": "9010737882",
+      "passwordHash": "$2a$10$X4vYtuh6U6tVy8.aHcAeyueqwJRlv1iA3FAUmfs42a62XmTpbTM.y",
+      "role": "provider",
+      "category": "services",
+      "serviceName": "Service Specialist",
+      "rating": 5,
+      "jobsCompleted": 0,
+      "isOnline": true,
+      "kycStatus": "pending",
+      "aadhaarNumber": "576972607113",
+      "vehicleNumber": "N/A",
+      "currentLocation": {
+        "lat": 17.4435,
+        "lng": 78.3772
+      },
+      "walletBalance": 0,
+      "createdAt": "2026-11-02T15:28:33.146Z"
+    },
+    {
+      "id": "prv_78730f41",
+      "name": "Kalyan Kumar",
+      "email": "9988771122@partner.loki",
+      "phone": "9988771122",
+      "passwordHash": "$2a$10$9iO3hmOe/5ErvNChwAWG.eXex.t5iQejpZsqoth4FZ7aF5YOsoH5G",
+      "role": "provider",
+      "category": "services",
+      "serviceName": "Service Specialist",
+      "rating": 5,
+      "jobsCompleted": 0,
+      "isOnline": false,
+      "kycStatus": "pending",
+      "isProfileComplete": false,
+      "aadhaarNumber": "PENDING_UPLOAD",
+      "vehicleNumber": "N/A",
+      "currentLocation": {
+        "lat": 17.4435,
+        "lng": 78.3772
+      },
+      "walletBalance": 0,
+      "createdAt": "2026-11-02T15:39:21.238Z"
+    },
+    {
+      "id": "prv_ba2482b3",
+      "name": "Kalyan Kumar",
+      "email": "9988771124@partner.loki",
+      "phone": "9988771124",
+      "passwordHash": "$2a$10$cg4D4PhoEVmcQzFJmoAUFutNsO3xVIYtIugdmuXxbHDomkHt97076",
+      "role": "provider",
+      "category": "services",
+      "serviceName": "Service Specialist",
+      "rating": 5,
+      "jobsCompleted": 0,
+      "isOnline": false,
+      "kycStatus": "pending",
+      "isProfileComplete": false,
+      "aadhaarNumber": "PENDING_UPLOAD",
+      "vehicleNumber": "N/A",
+      "currentLocation": {
+        "lat": 17.4435,
+        "lng": 78.3772
+      },
+      "walletBalance": 0,
+      "createdAt": "2026-11-02T15:43:11.997Z"
+    },
+    {
+      "id": "prv_14fe8f02",
+      "name": "prasad",
+      "email": "9848006463@partner.loki",
+      "phone": "9848006463",
+      "passwordHash": "$2a$10$mItiCzs0LN98ztaRM2PnR.ymxMi.WNsPeLZVxe5JoiZEWmIJjHA1y",
+      "role": "provider",
+      "category": "services",
+      "serviceName": "Service Specialist",
+      "rating": 5,
+      "jobsCompleted": 0,
+      "isOnline": false,
+      "kycStatus": "pending",
+      "isProfileComplete": false,
+      "aadhaarNumber": "1234567852",
+      "vehicleNumber": "N/A",
+      "currentLocation": {
+        "lat": 17.4435,
+        "lng": 78.3772
+      },
+      "walletBalance": 0,
+      "createdAt": "2026-11-05T03:21:57.206Z"
+    },
+    {
+      "id": "prv_cd289ddc",
+      "name": "gjhjhhjg",
+      "email": "6666656565665@partner.loki",
+      "phone": "6666656565665",
+      "passwordHash": "$2a$10$kCGahyZzjrg8vsY4/eDyqeKVXi.tgo5v7Hzo4h8x8FhDkc/AZUOj6",
+      "role": "provider",
+      "category": "services",
+      "serviceName": "Service Specialist",
+      "rating": 5,
+      "jobsCompleted": 0,
+      "isOnline": false,
+      "kycStatus": "pending",
+      "isProfileComplete": false,
+      "aadhaarNumber": "32+666232232",
+      "vehicleNumber": "N/A",
+      "currentLocation": {
+        "lat": 17.4435,
+        "lng": 78.3772
+      },
+      "walletBalance": 0,
+      "createdAt": "2026-11-05T03:38:16.508Z"
+    },
+    {
+      "id": "prv_5bde2151",
+      "name": "ssdsds",
+      "email": "569586555121@partner.loki",
+      "phone": "569586555121",
+      "passwordHash": "$2a$10$.6KwDcz8B110iKRAeT.cNOOQPJk9PGOqH9.mtLDTbe07pLvHdVeLa",
+      "role": "provider",
+      "category": "services",
+      "serviceName": "Service Specialist",
+      "rating": 5,
+      "jobsCompleted": 0,
+      "isOnline": false,
+      "kycStatus": "pending",
+      "isProfileComplete": false,
+      "aadhaarNumber": "656566665",
+      "vehicleNumber": "N/A",
+      "currentLocation": {
+        "lat": 17.4435,
+        "lng": 78.3772
+      },
+      "walletBalance": 0,
+      "createdAt": "2026-11-05T03:45:54.533Z"
+    },
+    {
+      "id": "prv_86dbb273",
+      "name": "aadad",
+      "email": "85695985566@partner.loki",
+      "phone": "85695985566",
+      "passwordHash": "$2a$10$xzS.vQi03kQDPUL0oWFKUeMiRvcNG1.zeqPW0LJXqTd489l42f91e",
+      "role": "provider",
+      "category": "services",
+      "serviceName": "Service Specialist",
+      "rating": 5,
+      "jobsCompleted": 0,
+      "isOnline": false,
+      "kycStatus": "pending",
+      "isProfileComplete": false,
+      "aadhaarNumber": "555555555",
+      "vehicleNumber": "N/A",
+      "currentLocation": {
+        "lat": 17.4435,
+        "lng": 78.3772
+      },
+      "walletBalance": 0,
+      "createdAt": "2026-11-05T03:57:00.280Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD-9032",
+      "customerId": "usr_cust_1",
+      "customerName": "Prasad (Customer)",
+      "customerPhone": "+91 98765 11111",
+      "providerId": "prv_1",
+      "providerName": "Ramesh Kumar",
+      "serviceId": "srv_1",
+      "serviceName": "Bathroom Tap Leakage Repair",
+      "category": "cat_plumbing",
+      "amount": 249,
+      "paymentStatus": "PENDING",
+      "paymentMethod": "Direct Cash / UPI to Partner",
+      "orderStatus": "CANCELLED",
+      "customerAddress": "Flat 304, Fortune Towers, Madhapur, Hyderabad",
+      "coordinates": {
+        "lat": 17.4475,
+        "lng": 78.3755
+      },
+      "providerLocation": {
+        "lat": 17.4445,
+        "lng": 78.3768
+      },
+      "otp": "5821",
+      "notes": "Washbasin faucet tap continuously dripping water. Needs urgent replacement.",
+      "createdAt": "2026-11-05T09:49:21.823Z"
+    },
+    {
+      "id": "ORD-9030",
+      "customerId": "usr_cust_1",
+      "customerName": "Prasad (Customer)",
+      "customerPhone": "+91 98765 11111",
+      "providerId": "prv_1",
+      "providerName": "Ramesh Kumar",
+      "serviceId": "srv_1",
+      "serviceName": "Emergency Pipeline Leak & Valve Repair",
+      "category": "cat_plumbing",
+      "amount": 299,
+      "paymentStatus": "PENDING",
+      "paymentMethod": "Direct Cash / UPI to Partner",
+      "orderStatus": "CANCELLED",
+      "customerAddress": "Flat 501, Sai Residency, Madhapur, Hyderabad",
+      "coordinates": {
+        "lat": 17.447,
+        "lng": 78.376
+      },
+      "providerLocation": {
+        "lat": 17.4445,
+        "lng": 78.3768
+      },
+      "otp": "3942",
+      "notes": "Urgent water pipe burst under bathroom washbasin. Needs immediate fix.",
+      "createdAt": "2026-11-05T09:28:37.440Z"
+    },
+    {
+      "id": "ORD-9021",
+      "customerId": "usr_cust_1",
+      "customerName": "Prasad (Customer)",
+      "customerPhone": "+91 98765 11111",
+      "providerId": "prv_1",
+      "providerName": "Ramesh Kumar",
+      "serviceId": "srv_1",
+      "serviceName": "Tap & Shower Repair / Replacement",
+      "category": "cat_plumbing",
+      "amount": 199,
+      "paymentStatus": "PAID",
+      "paymentMethod": "UPI",
+      "orderStatus": "COMPLETED",
+      "customerAddress": "Flat 402, Green Meadows, Madhapur, Hyderabad",
+      "coordinates": {
+        "lat": 17.4435,
+        "lng": 78.3772
+      },
+      "providerLocation": {
+        "lat": 17.4445,
+        "lng": 78.3768
+      },
+      "otp": "4821",
+      "notes": "Master bathroom shower head is leaking constantly",
+      "createdAt": "2026-11-02T05:12:25.635Z"
+    },
+    {
+      "id": "ORD-9022",
+      "customerId": "usr_cust_1",
+      "customerName": "Prasad (Customer)",
+      "customerPhone": "+91 98765 11111",
+      "providerId": "prv_3",
+      "providerName": "Rajesh Varma",
+      "serviceId": "srv_5",
+      "serviceName": "Hyperlocal Express Parcel Drop",
+      "category": "cat_delivery",
+      "amount": 85,
+      "paymentStatus": "PAID",
+      "paymentMethod": "Loki Wallet",
+      "orderStatus": "COMPLETED",
+      "customerAddress": "Gachibowli to HITEC City, Hyderabad",
+      "coordinates": {
+        "lat": 17.441,
+        "lng": 78.381
+      },
+      "otp": "7193",
+      "notes": "Office laptop charger delivery",
+      "createdAt": "2026-11-02T02:37:25.635Z"
+    }
+  ],
+  "locations": [
+    {
+      "id": "dist_hyderabad",
+      "name": "Hyderabad",
+      "state": "Telangana",
+      "mandals": [
+        {
+          "id": "mnd_serilingampally",
+          "name": "Serilingampally",
+          "villages": [
+            {
+              "id": "vlg_madhapur",
+              "name": "Madhapur",
+              "pincode": "500081"
+            },
+            {
+              "id": "vlg_gachibowli",
+              "name": "Gachibowli",
+              "pincode": "500032"
+            },
+            {
+              "id": "vlg_kondapur",
+              "name": "Kondapur",
+              "pincode": "500084"
+            }
+          ]
+        },
+        {
+          "id": "mnd_khairatabad",
+          "name": "Khairatabad",
+          "villages": [
+            {
+              "id": "vlg_banjara_hills",
+              "name": "Banjara Hills",
+              "pincode": "500034"
+            },
+            {
+              "id": "vlg_jubilee_hills",
+              "name": "Jubilee Hills",
+              "pincode": "500033"
+            },
+            {
+              "id": "vlg_somajiguda",
+              "name": "Somajiguda",
+              "pincode": "500082"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dist_rangareddy",
+      "name": "Rangareddy",
+      "state": "Telangana",
+      "mandals": [
+        {
+          "id": "mnd_rajendranagar",
+          "name": "Rajendranagar",
+          "villages": [
+            {
+              "id": "vlg_attapur",
+              "name": "Attapur",
+              "pincode": "500048"
+            },
+            {
+              "id": "vlg_bandlaguda",
+              "name": "Bandlaguda Jagir",
+              "pincode": "500086"
+            },
+            {
+              "id": "vlg_narsingi",
+              "name": "Narsingi",
+              "pincode": "500075"
+            }
+          ]
+        },
+        {
+          "id": "mnd_shamshabad",
+          "name": "Shamshabad",
+          "villages": [
+            {
+              "id": "vlg_airport_colony",
+              "name": "Airport Colony",
+              "pincode": "501218"
+            },
+            {
+              "id": "vlg_mamidipally",
+              "name": "Mamidipally",
+              "pincode": "500005"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dist_medchal",
+      "name": "Medchal-Malkajgiri",
+      "state": "Telangana",
+      "mandals": [
+        {
+          "id": "mnd_kukatpally",
+          "name": "Kukatpally",
+          "villages": [
+            {
+              "id": "vlg_kphb",
+              "name": "KPHB Colony",
+              "pincode": "500072"
+            },
+            {
+              "id": "vlg_pragathi",
+              "name": "Pragathi Nagar",
+              "pincode": "500090"
+            },
+            {
+              "id": "vlg_nizampet",
+              "name": "Nizampet",
+              "pincode": "500090"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "promotions": [
+    {
+      "id": "promo_hero_1",
+      "type": "hero",
+      "tag": "100% SATISFACTION GUARANTEE",
+      "title": "Certified & Background Verified",
+      "subtitle": "Government Aadhaar & Police verified skilled technicians",
+      "cta": "Explore Fixes",
+      "badge": "VERIFIED",
+      "imageUrl": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=900&auto=format&fit=crop&q=80",
+      "colors": [
+        "#064e3b",
+        "#047857",
+        "#10b981"
+      ],
+      "icon": "shield-check",
+      "active": true,
+      "impressions": 1420,
+      "clicks": 312,
+      "priority": 1,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_hero_2",
+      "type": "hero",
+      "tag": "30-MIN DOORSTEP ARRIVAL",
+      "title": "Emergency Plumbing & Wiring",
+      "subtitle": "Flat 20% OFF on all repair bookings today",
+      "cta": "Book Instant",
+      "badge": "FLAT 20% OFF",
+      "imageUrl": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=900&auto=format&fit=crop&q=80",
+      "colors": [
+        "#7c2d12",
+        "#c2410c",
+        "#f97316"
+      ],
+      "icon": "zap",
+      "active": true,
+      "impressions": 980,
+      "clicks": 194,
+      "priority": 2,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_hero_3",
+      "type": "hero",
+      "tag": "HYPERLOCAL EXPRESS",
+      "title": "Medicines & Daily Kirana Drop",
+      "subtitle": "Delivered to your doorstep in 15 mins",
+      "cta": "Send Package",
+      "badge": "15 MINS",
+      "imageUrl": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=900&auto=format&fit=crop&q=80",
+      "colors": [
+        "#1e1b4b",
+        "#4338ca",
+        "#6366f1"
+      ],
+      "icon": "package",
+      "active": true,
+      "impressions": 870,
+      "clicks": 215,
+      "priority": 3,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_spotlight_1",
+      "type": "spotlight",
+      "tag": "🌟 GRAND SHOWROOM OPENING",
+      "title": "Sri Krishna Jewellers",
+      "offer": "Flat 25% OFF on Making Charges + Free Gold Coin!",
+      "description": "Exclusive 916 Hallmark Gold & Diamond Collection. Grand opening celebration live today!",
+      "location": "Main Road, Madhapur (Opp. Metro Pillar 14)",
+      "imageUrl": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=900&auto=format&fit=crop&q=80",
+      "badge": "GOLD SHOP OPENING",
+      "colors": [
+        "#381A00",
+        "#B45309",
+        "#D97706"
+      ],
+      "cta": "Explore Gold Offers",
+      "icon": "diamond",
+      "active": true,
+      "impressions": 2850,
+      "clicks": 640,
+      "priority": 1,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_spotlight_2",
+      "type": "spotlight",
+      "tag": "🛍️ MEGA RETAIL LAUNCH",
+      "title": "South India Silk & Fashion Mall",
+      "offer": "Buy 1 Get 1 Free on Designer Silk Sarees",
+      "description": "Celebrity ribbon-cutting & inaugural mega discounts on all wedding collections & ethnic wear.",
+      "location": "Jubilee Hills Checkpost, Road No. 36",
+      "imageUrl": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900&auto=format&fit=crop&q=80",
+      "badge": "MALL OPENING",
+      "colors": [
+        "#1E1B4B",
+        "#4338CA",
+        "#6366F1"
+      ],
+      "cta": "View Collections",
+      "icon": "shopping-bag",
+      "active": true,
+      "impressions": 2100,
+      "clicks": 480,
+      "priority": 2,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_spotlight_3",
+      "type": "spotlight",
+      "tag": "🍽️ FOOD MEGA INAUGURATION",
+      "title": "Paradise Royal Dum Biryani",
+      "offer": "Complimentary Dessert & Buy 2 Get 1 Free",
+      "description": "Authentic Nizami flavors, family dining & royal ambience. Inaugural festive feast for all foodies!",
+      "location": "Hitec City, Cyber Towers Road",
+      "imageUrl": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=900&auto=format&fit=crop&q=80",
+      "badge": "NEW BRANCH OPEN",
+      "colors": [
+        "#310B0B",
+        "#991B1B",
+        "#DC2626"
+      ],
+      "cta": "Reserve Table / Order",
+      "icon": "utensils",
+      "active": true,
+      "impressions": 1950,
+      "clicks": 390,
+      "priority": 3,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_spotlight_4",
+      "type": "spotlight",
+      "tag": "⚡ SMART TECH SHOWROOM",
+      "title": "Croma Mega Electronics",
+      "offer": "Up to 50% OFF on 4K Smart TVs & Smartphones",
+      "description": "Exclusive inaugural zero-cost EMI + free soundbar with select appliances. Grand opening week!",
+      "location": "Inorbit Mall Road, Mindspace Circle",
+      "imageUrl": "https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=900&auto=format&fit=crop&q=80",
+      "badge": "TECH LAUNCH",
+      "colors": [
+        "#0F172A",
+        "#0284C7",
+        "#0EA5E9"
+      ],
+      "cta": "Grab Electronics Deals",
+      "icon": "tv",
+      "active": true,
+      "impressions": 1620,
+      "clicks": 310,
+      "priority": 4,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_deal_1",
+      "type": "deal",
+      "tag": "APPLIANCE CARE",
+      "badge": "LIMITED SLOTS",
+      "title": "AC Gas Refill & Jet Foam Service",
+      "subtitle": "Pre-summer discount starts at just ₹399",
+      "offer": "Starts at ₹399",
+      "cta": "Grab Deal",
+      "imageUrl": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&auto=format&fit=crop&q=80",
+      "colors": [
+        "#2A1706",
+        "#9A4A0A",
+        "#D97706"
+      ],
+      "icon": "snowflake",
+      "active": true,
+      "impressions": 1350,
+      "clicks": 290,
+      "priority": 1,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_deal_2",
+      "type": "deal",
+      "tag": "EMERGENCY FIX",
+      "badge": "FLAT ₹100 OFF",
+      "title": "Bike & Car Breakdown Assistance",
+      "subtitle": "Mechanic reaches in 15 mins with battery jumpstart",
+      "offer": "Flat ₹100 OFF",
+      "cta": "Get Help",
+      "imageUrl": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80",
+      "colors": [
+        "#2B1B2A",
+        "#831843",
+        "#BE185D"
+      ],
+      "icon": "car",
+      "active": true,
+      "impressions": 1780,
+      "clicks": 410,
+      "priority": 2,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_deal_3",
+      "type": "deal",
+      "tag": "INSTANT COURIER",
+      "badge": "FASTEST PICKUP",
+      "title": "Pick & Drop Any Item Across City",
+      "subtitle": "Medicines, keys, food, documents within 20 mins",
+      "offer": "Flat ₹40 OFF",
+      "cta": "Order Drop",
+      "imageUrl": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=800&auto=format&fit=crop&q=80",
+      "colors": [
+        "#062822",
+        "#065F46",
+        "#059669"
+      ],
+      "icon": "bike",
+      "active": true,
+      "impressions": 940,
+      "clicks": 180,
+      "priority": 3,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_deal_4",
+      "type": "deal",
+      "tag": "HOME MAKEOVER",
+      "badge": "FLAT ₹300 OFF",
+      "title": "Deep Home Cleaning & Pest Shield",
+      "subtitle": "Full bathroom, kitchen & sofa sanitization",
+      "offer": "Flat ₹300 OFF",
+      "cta": "Book Pro",
+      "imageUrl": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&auto=format&fit=crop&q=80",
+      "colors": [
+        "#1E1B4B",
+        "#3730A3",
+        "#4F46E5"
+      ],
+      "icon": "sparkles",
+      "active": true,
+      "impressions": 1120,
+      "clicks": 230,
+      "priority": 4,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    },
+    {
+      "id": "promo_popup_1",
+      "type": "popup",
+      "storeName": "Kalanikethan Silks & Fashion Mall",
+      "tag": "GRAND SHOWROOM OPENING",
+      "badge": "EXCLUSIVE FESTIVAL SALE",
+      "title": "Kalanikethan Silks & Fashion Mall",
+      "offer": "FLAT 50% OFF",
+      "offerDetails": "On All Designer Sarees, Ethnic & Western Collections",
+      "promoCode": "LOKIFASHION50",
+      "voucherValue": "₹500",
+      "location": "Main Road, Madhapur (Opp. Metro Pillar 118)",
+      "imageUrl": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900&auto=format&fit=crop&q=80",
+      "perks": [
+        "Pure Silk Sarees",
+        "Menswear & Suits",
+        "Kids Festive Wear"
+      ],
+      "giftNote": "🎁 First 100 Walk-in Customers get a Free 22K Gold Coin + ₹500 Voucher!",
+      "cta": "Claim ₹500 Voucher & Visit Store",
+      "colors": [
+        "#831843",
+        "#BE185D",
+        "#FB7185"
+      ],
+      "active": true,
+      "impressions": 3400,
+      "clicks": 980,
+      "priority": 1,
+      "createdAt": "2026-11-05T06:33:06.306Z"
+    }
+  ]
+}

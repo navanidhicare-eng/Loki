@@ -1,0 +1,1621 @@
+import 'package:flutter/material.dart';
+import '../core/constants.dart';
+import '../services/partner_api_service.dart';
+
+class PartnerProfileScreen extends StatefulWidget {
+  final VoidCallback? onProfileUpdated;
+
+  const PartnerProfileScreen({Key? key, this.onProfileUpdated}) : super(key: key);
+
+  @override
+  State<PartnerProfileScreen> createState() => _PartnerProfileScreenState();
+}
+
+class _PartnerProfileScreenState extends State<PartnerProfileScreen> {
+  final PartnerApiService _api = PartnerApiService();
+
+  // 1. Personal & Family Information Controllers
+  late TextEditingController _nameController;
+  late TextEditingController _fatherNameController;
+  late TextEditingController _motherNameController;
+  late TextEditingController _dobController;
+  late TextEditingController _ageController;
+  late TextEditingController _phoneController;
+  late TextEditingController _emergencyContactController;
+  late TextEditingController _emergencyRelationController;
+  late TextEditingController _emailController;
+
+  // 2. Current Address State & Controllers
+  String _selectedDistrict = 'Hyderabad';
+  String _selectedMandal = 'Serilingampally / Madhapur';
+  String _selectedVillage = 'Ayyappa Society';
+  late TextEditingController _doorStreetController;
+  late TextEditingController _pincodeController;
+
+  // Physical Shop / Workshop Details
+  bool _hasPhysicalShop = false;
+  late TextEditingController _shopNameController;
+  String _selectedShopDistrict = 'Hyderabad';
+  String _selectedShopMandal = 'Serilingampally / Madhapur';
+  String _selectedShopVillage = 'Madhapur Main Road';
+  late TextEditingController _shopDoorStreetController;
+  late TextEditingController _shopGstController;
+  bool _shopFrontPhotoUploaded = false;
+  bool _shopInsidePhotoUploaded = false;
+
+  // 3. Service & Profession Controllers
+  late TextEditingController _serviceNameController;
+  String _selectedCategory = 'cat_plumbing';
+  String _selectedExperience = '3 - 5 Years';
+
+  // 4. Working Hours & Service Radius
+  String _selectedWorkingHours = 'Full-Time (9:00 AM - 6:00 PM)';
+  String _selectedServiceRadius = '10 KM (Standard Urban Coverage)';
+
+  // 5. KYC Government IDs Controllers
+  late TextEditingController _aadhaarController;
+  late TextEditingController _panNumberController;
+  late TextEditingController _drivingLicenseController;
+  late TextEditingController _skillCertificatesController;
+
+  // 6. Local Guarantor / Reference Controllers
+  late TextEditingController _guarantorNameController;
+  late TextEditingController _guarantorRelationController;
+  late TextEditingController _guarantorPhoneController;
+
+  // 7. Payout Controller
+  late TextEditingController _upiController;
+
+  // Document Upload States
+  bool _aadhaarFrontUploaded = true;
+  bool _aadhaarBackUploaded = true;
+  bool _panCardUploaded = true;
+  bool _drivingLicenseUploaded = true;
+  bool _skillCertificateUploaded = true;
+  bool _livePhotoVerified = true;
+
+  bool _isLoading = false;
+
+  final List<Map<String, String>> _categories = const [
+    {'id': 'cat_plumbing', 'name': '🔧 Plumbing Services'},
+    {'id': 'cat_electrical', 'name': '⚡ Electrical & Wiring'},
+    {'id': 'cat_cleaning', 'name': '✨ Home Deep Cleaning'},
+    {'id': 'cat_appliances', 'name': '📺 AC & Appliance Repair'},
+    {'id': 'cat_mechanic', 'name': '🚗 Bike & Car Mechanic'},
+    {'id': 'cat_delivery', 'name': '📦 Hyperlocal Delivery'},
+    {'id': 'cat_shops', 'name': '🛍️ Retail Merchant'},
+    {'id': 'cat_carpentry', 'name': '🪵 Carpentry Works'},
+    {'id': 'cat_painting', 'name': '🎨 Painting & Waterproofing'},
+  ];
+
+  // Comprehensive District -> Mandal -> Village / Landmark Hierarchy for AP & TS
+  static const Map<String, Map<String, List<String>>> _addressHierarchy = {
+    'Hyderabad': {
+      'Serilingampally / Madhapur': [
+        'Madhapur Main Road',
+        'Hitec City Cyber Towers',
+        'Gachibowli Junction',
+        'Kondapur Signal',
+        'Ayyappa Society',
+        'Financial District',
+        'Kothaguda X Roads',
+      ],
+      'Khairatabad': [
+        'Khairatabad Junction',
+        'Somajiguda Circle',
+        'Raj Bhavan Road',
+        'Punjagutta Central',
+        'Lakdikapul Metro',
+      ],
+      'Jubilee Hills / Shaikpet': [
+        'Jubilee Hills Checkpost',
+        'Road No. 36 & 45',
+        'Film Nagar Temple Road',
+        'Shaikpet Nala',
+        'Tolichowki Cross Road',
+      ],
+      'Kukatpally': [
+        'KPHB Colony Phase 1-6',
+        'JNTU University Road',
+        'Kukatpally Y Junction',
+        'Pragathi Nagar',
+        'Nizampet X Road',
+      ],
+      'Secunderabad': [
+        'Paradise Circle',
+        'Clock Tower Center',
+        'Trimulgherry X Road',
+        'West Marredpally',
+        'Patny Junction',
+      ],
+      'Ameerpet': [
+        'Ameerpet Cross Roads',
+        'SR Nagar Metro',
+        'Mythrivanam Complex',
+        'Sanjeeva Reddy Nagar',
+        'Yellareddyguda',
+      ],
+      'Charminar / Old City': [
+        'Charminar Historical Gate',
+        'Nayapul Madina',
+        'Shah Ali Banda',
+        'Chandrayangutta Ring Road',
+        'Falaknuma Palace Road',
+      ],
+      'Malkajgiri': [
+        'Anandbagh Junction',
+        'Neredmet X Roads',
+        'Safilguda Lake Park',
+        'Moula Ali Industrial Area',
+        'ECIL Cross Roads',
+      ],
+    },
+    'Rangareddy': {
+      'Gandipet / Narsingi': [
+        'Narsingi Junction',
+        'Kokapet SEZ Neopolis',
+        'Gandipet Lake View',
+        'Manikonda Marrichettu',
+        'Puppalguda Alkapur Township',
+      ],
+      'Rajendranagar': [
+        'Attapur Ring Road Pillar 140',
+        'Aramghar Junction',
+        'Budvel Railway Station',
+        'Upperpally Pillar 190',
+        'Hyderguda Pillar 120',
+      ],
+      'Shamshabad': [
+        'Airport Approach Road',
+        'Shamshabad Bus Terminal',
+        'Tondupally Toll Plaza',
+        'Kotwalguda Nursery Zone',
+      ],
+      'Ibrahimpatnam': [
+        'Ibrahimpatnam Bus Stand',
+        'Adibatla Aerospace IT SEZ',
+        'Kongara Kalan Collectorate',
+        'Bongloor ORR Junction',
+      ],
+      'Maheshwaram': [
+        'Hardware & IT Park',
+        'Fab City SEZ',
+        'Mankhal Industrial Hub',
+        'Maheshwaram Gate',
+      ],
+    },
+    'Medchal-Malkajgiri': {
+      'Quthbullapur / Kompally': [
+        'Suchitra Circle',
+        'Kompally Big Bazaar',
+        'Jeedimetla Industrial Area',
+        'Chintal Bus Stop',
+        'Shapur Nagar Main Road',
+      ],
+      'Medchal': [
+        'Medchal Checkpost',
+        'Kandlakoya Oxygen Park',
+        'Athvelly Junction',
+        'Gundlapochampally',
+      ],
+      'Alwal': [
+        'Alwal Hills',
+        'Old Alwal Temple Road',
+        'Lothkunta Military Area',
+        'Venkatapuram',
+      ],
+      'Uppal': [
+        'Uppal Ring Road & Metro',
+        'Ramanthapur Poly-Technic',
+        'Boduppal Main Road',
+        'Peerzadiguda Kaman',
+        'Habsiguda X Roads',
+      ],
+      'Ghatkesar': [
+        'Ghatkesar Railway Station',
+        'Pocharam Infosys Campus',
+        'Annojiguda ORR Toll',
+        'Narapally Junction',
+      ],
+    },
+    'Visakhapatnam': {
+      'Visakhapatnam Urban': [
+        'RTC Complex & Dwaraka Nagar',
+        'Siripuram Circle',
+        'Jagadamba Junction',
+        'MVP Colony Sector 1-12',
+        'Asilmetta Junction',
+      ],
+      'Gajuwaka': [
+        'Gajuwaka Junction',
+        'Steel Plant Main Gate',
+        'Kurmannapalem Highway',
+        'Auto Nagar Phase 1-3',
+      ],
+      'Madhurawada': [
+        'Madhurawada Car Shed',
+        'ACA-VDCA Cricket Stadium',
+        'Kommadi Junction',
+        'Rushikonda IT SEZ',
+      ],
+      'Bheemunipatnam': [
+        'Bheemili Beach Road',
+        'Tagarapuvalasa Center',
+        'Thimmapuram Light House',
+      ],
+      'Anakapalle': [
+        'Anakapalle Ring Road',
+        'Jaggayyapalem',
+        'Lankelapalem Junction',
+      ],
+    },
+    'Vijayawada (NTR)': {
+      'Vijayawada Urban': [
+        'Benz Circle Flyover',
+        'MG Road (Bandar Road)',
+        'Governorpet Center',
+        'Besant Road Market',
+        'Suryaraopet',
+      ],
+      'Gunadala': [
+        'Gunadala Center / Mary Shrine',
+        'Ramavarappadu Ring',
+        'Machavaram Down',
+      ],
+      'Bhavanipuram': [
+        'Bhavanipuram Main Road',
+        'Gollapudi Bypass Junction',
+        'Vidyadharapuram Depot',
+      ],
+      'Penamaluru': [
+        'Penamaluru Center',
+        'Poranki Center',
+        'Tadigadapa 100ft Road',
+        'Kanuru Bus Stand',
+      ],
+      'Gannavaram': [
+        'Airport Terminal Gate',
+        'Gannavaram Bus Stand',
+        'Kesarapalli HCL SEZ',
+      ],
+    },
+    'Guntur': {
+      'Guntur Urban': [
+        'Arundelpet Main Road',
+        'Brodipet Broad Way',
+        'Lakshmipuram Main Road',
+        'Kothapet Market',
+      ],
+      'Tenali': [
+        'Tenali Gandhi Chowk',
+        'Chenchupet Center',
+        'Ithanagar Canal Road',
+      ],
+      'Mangalagiri': [
+        'Mangalagiri Temple Town',
+        'AIIMS Hospital Highway Road',
+        'Atmakur Junction',
+      ],
+      'Narasaraopet': [
+        'Clock Tower Center',
+        'Palnadu Road',
+        'Station Road',
+      ],
+    },
+    'Warangal': {
+      'Hanamkonda': [
+        'Hanamkonda Bus Station',
+        'Subedari Collectorate Road',
+        'Kakatiya University Gate',
+        'Naimnagar Cross Road',
+      ],
+      'Warangal Urban': [
+        'Chowrasta Market',
+        'MGM Hospital Circle',
+        'Kashibugga Center',
+        'Under Bridge Road',
+      ],
+      'Kazipet': [
+        'Kazipet Railway Colony',
+        'Fathimanagar Circle',
+        'Madikonda IT SEZ',
+      ],
+    },
+    'Tirupati': {
+      'Tirupati Urban': [
+        'Alipiri Footpath Gateway',
+        'RTC Central Bus Stand',
+        'Railway Station Circle',
+        'Bhavani Nagar Center',
+      ],
+      'Chandragiri': [
+        'Chandragiri Fort Road',
+        'Srinivasa Mangapuram',
+        'A.Rangampet Area',
+      ],
+      'Renigunta': [
+        'Renigunta Airport Road',
+        'Railway Junction Circle',
+        'Gajulamandyam Industrial Area',
+      ],
+    },
+  };
+
+  List<String> get _districts => _addressHierarchy.keys.toList();
+
+  List<String> _getMandalsForDistrict(String district) {
+    return _addressHierarchy[district]?.keys.toList() ?? [];
+  }
+
+  List<String> _getVillagesForMandal(String district, String mandal) {
+    return _addressHierarchy[district]?[mandal] ?? [];
+  }
+
+  final List<String> _experienceOptions = const [
+    'Fresher / Under 1 Year',
+    '1 - 3 Years',
+    '3 - 5 Years',
+    '5 - 10 Years',
+    '10+ Years Expert',
+  ];
+
+  final List<String> _workingHoursOptions = const [
+    'Full-Time (9:00 AM - 6:00 PM)',
+    'Part-Time (Morning: 8:00 AM - 1:00 PM)',
+    'Part-Time (Evening: 3:00 PM - 9:00 PM)',
+    'Flexible / On-Demand Hours',
+  ];
+
+  final List<String> _serviceRadiusOptions = const [
+    '5 KM (Local Neighborhood)',
+    '10 KM (Standard Urban Coverage)',
+    '15 KM (Wide City Coverage)',
+    '25 KM (Extended Region)',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    final profile = _api.profile ?? {};
+
+    // 1. Personal & Family Information
+    _nameController = TextEditingController(text: profile['name'] ?? 'Ramesh Kumar');
+    _fatherNameController = TextEditingController(text: profile['fatherName'] ?? 'Anand Kumar');
+    _motherNameController = TextEditingController(text: profile['motherName'] ?? 'Lakshmi Devi');
+    _dobController = TextEditingController(text: profile['dob'] ?? '15/08/1992');
+    _ageController = TextEditingController(text: profile['age'] ?? '32');
+    _phoneController = TextEditingController(text: profile['phone'] ?? '+91 98765 22222');
+    _emergencyContactController = TextEditingController(text: profile['emergencyContact'] ?? '+91 98765 00112');
+    _emergencyRelationController = TextEditingController(text: profile['emergencyRelation'] ?? 'Spouse / Brother');
+    _emailController = TextEditingController(text: profile['email'] ?? 'ramesh@loki.com');
+
+    // 2. Current Address Hierarchy Init
+    if (profile['district'] != null && _addressHierarchy.containsKey(profile['district'])) {
+      _selectedDistrict = profile['district'];
+    } else {
+      _selectedDistrict = 'Hyderabad';
+    }
+
+    final mandals = _getMandalsForDistrict(_selectedDistrict);
+    if (profile['mandal'] != null && mandals.contains(profile['mandal'])) {
+      _selectedMandal = profile['mandal'];
+    } else {
+      _selectedMandal = mandals.isNotEmpty ? mandals.first : '';
+    }
+
+    final villages = _getVillagesForMandal(_selectedDistrict, _selectedMandal);
+    if (profile['village'] != null && villages.contains(profile['village'])) {
+      _selectedVillage = profile['village'];
+    } else {
+      _selectedVillage = villages.isNotEmpty ? villages.first : '';
+    }
+
+    _doorStreetController = TextEditingController(
+      text: profile['currentAddress'] ?? profile['address'] ?? 'Flat 204, Sai Residency, Ayyappa Society Main Road',
+    );
+    _pincodeController = TextEditingController(text: profile['pincode'] ?? '500081');
+
+    // Physical Shop Hierarchy Init
+    _hasPhysicalShop = profile['hasPhysicalShop'] == true || profile['hasPhysicalShop'] == 'true';
+    _shopNameController = TextEditingController(text: profile['shopName'] ?? 'Ramesh Electrical & Sanitary Works');
+
+    if (profile['shopDistrict'] != null && _addressHierarchy.containsKey(profile['shopDistrict'])) {
+      _selectedShopDistrict = profile['shopDistrict'];
+    } else {
+      _selectedShopDistrict = 'Hyderabad';
+    }
+
+    final shopMandals = _getMandalsForDistrict(_selectedShopDistrict);
+    if (profile['shopMandal'] != null && shopMandals.contains(profile['shopMandal'])) {
+      _selectedShopMandal = profile['shopMandal'];
+    } else {
+      _selectedShopMandal = shopMandals.isNotEmpty ? shopMandals.first : '';
+    }
+
+    final shopVillages = _getVillagesForMandal(_selectedShopDistrict, _selectedShopMandal);
+    if (profile['shopVillage'] != null && shopVillages.contains(profile['shopVillage'])) {
+      _selectedShopVillage = profile['shopVillage'];
+    } else {
+      _selectedShopVillage = shopVillages.isNotEmpty ? shopVillages.first : '';
+    }
+
+    _shopDoorStreetController = TextEditingController(
+      text: profile['shopAddress'] ?? 'Shop No. 12, Main Bazaar Road, Near Hanuman Temple',
+    );
+    _shopGstController = TextEditingController(text: profile['shopGstNumber'] ?? '36AAAAA0000A1Z5');
+    _shopFrontPhotoUploaded = profile['shopFrontPhotoUrl'] != null || true;
+    _shopInsidePhotoUploaded = profile['shopInsidePhotoUrl'] != null || true;
+
+    // 3. Service Trade & Profession
+    _serviceNameController = TextEditingController(text: profile['serviceName'] ?? 'Master Plumber');
+    if (profile['category'] != null && _categories.any((c) => c['id'] == profile['category'])) {
+      _selectedCategory = profile['category'];
+    }
+    if (profile['experience'] != null && _experienceOptions.contains(profile['experience'])) {
+      _selectedExperience = profile['experience'];
+    }
+    if (profile['district'] != null && _districts.contains(profile['district'])) {
+      _selectedDistrict = profile['district'];
+    }
+
+    // 4. Working Hours & Service Radius
+    if (profile['workingHours'] != null && _workingHoursOptions.contains(profile['workingHours'])) {
+      _selectedWorkingHours = profile['workingHours'];
+    }
+    if (profile['serviceRadius'] != null && _serviceRadiusOptions.contains(profile['serviceRadius'])) {
+      _selectedServiceRadius = profile['serviceRadius'];
+    }
+
+    // 5. KYC Government IDs
+    _aadhaarController = TextEditingController(text: profile['aadhaarNumber'] ?? '5412-8890-4521');
+    _panNumberController = TextEditingController(text: profile['panNumber'] ?? 'ABCDE1234F');
+    _drivingLicenseController = TextEditingController(text: profile['drivingLicenseNumber'] ?? 'TS09 20210004512');
+    _skillCertificatesController = TextEditingController(text: profile['skillCertificates'] ?? 'Govt. ITI Plumbing & Sanitary Certificate');
+
+    // 6. Local Guarantor / Reference
+    _guarantorNameController = TextEditingController(text: profile['guarantorName'] ?? 'K. Venkat Rao');
+    _guarantorRelationController = TextEditingController(text: profile['guarantorRelation'] ?? 'Senior Contractor / Reference');
+    _guarantorPhoneController = TextEditingController(text: profile['guarantorPhone'] ?? '+91 94401 23456');
+
+    // 7. Payout
+    _upiController = TextEditingController(text: profile['upiId'] ?? '9876522222@ybl');
+
+    // Document Upload flags
+    _aadhaarFrontUploaded = profile['aadhaarFrontUrl'] != null || true;
+    _aadhaarBackUploaded = profile['aadhaarBackUrl'] != null || true;
+    _panCardUploaded = profile['panCardUrl'] != null || true;
+    _drivingLicenseUploaded = profile['drivingLicenseUrl'] != null || true;
+    _skillCertificateUploaded = profile['skillCertificatesUrl'] != null || true;
+    _livePhotoVerified = profile['livePhotoVerificationStatus'] != 'Pending';
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _fatherNameController.dispose();
+    _motherNameController.dispose();
+    _dobController.dispose();
+    _ageController.dispose();
+    _phoneController.dispose();
+    _emergencyContactController.dispose();
+    _emergencyRelationController.dispose();
+    _emailController.dispose();
+    _doorStreetController.dispose();
+    _pincodeController.dispose();
+    _shopNameController.dispose();
+    _shopDoorStreetController.dispose();
+    _shopGstController.dispose();
+    _serviceNameController.dispose();
+    _aadhaarController.dispose();
+    _panNumberController.dispose();
+    _drivingLicenseController.dispose();
+    _skillCertificatesController.dispose();
+    _guarantorNameController.dispose();
+    _guarantorRelationController.dispose();
+    _guarantorPhoneController.dispose();
+    _upiController.dispose();
+    super.dispose();
+  }
+
+  // Date picker helper for Date of Birth & Age calculation
+  Future<void> _selectDateOfBirth() async {
+    final DateTime initialDate = DateTime(1994, 8, 15);
+    final DateTime firstDate = DateTime(1950, 1, 1);
+    final DateTime lastDate = DateTime(2008, 12, 31);
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: PartnerConstants.primary,
+              onPrimary: Colors.white,
+              onSurface: Color(0xFF192338),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      final now = DateTime.now();
+      int age = now.year - picked.year;
+      if (now.month < picked.month || (now.month == picked.month && now.day < picked.day)) {
+        age--;
+      }
+      setState(() {
+        _dobController.text = '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}';
+        _ageController.text = '$age';
+      });
+    }
+  }
+
+  void _handleSaveProfile() async {
+    final name = _nameController.text.trim();
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your full name'), backgroundColor: Colors.red),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    final payload = {
+      'name': name,
+      'fatherName': _fatherNameController.text.trim(),
+      'motherName': _motherNameController.text.trim(),
+      'dob': _dobController.text.trim(),
+      'age': _ageController.text.trim(),
+      'email': _emailController.text.trim(),
+      'emergencyContact': _emergencyContactController.text.trim(),
+      'emergencyRelation': _emergencyRelationController.text.trim(),
+      'district': _selectedDistrict,
+      'mandal': _selectedMandal,
+      'village': _selectedVillage,
+      'landmark': _selectedVillage,
+      'currentAddress': '${_doorStreetController.text.trim()}, $_selectedVillage, $_selectedMandal, $_selectedDistrict - ${_pincodeController.text.trim()}',
+      'address': '${_doorStreetController.text.trim()}, $_selectedVillage, $_selectedMandal, $_selectedDistrict',
+      'pincode': _pincodeController.text.trim(),
+      'hasPhysicalShop': _hasPhysicalShop,
+      'shopName': _hasPhysicalShop ? _shopNameController.text.trim() : '',
+      'shopDistrict': _hasPhysicalShop ? _selectedShopDistrict : '',
+      'shopMandal': _hasPhysicalShop ? _selectedShopMandal : '',
+      'shopVillage': _hasPhysicalShop ? _selectedShopVillage : '',
+      'shopLandmark': _hasPhysicalShop ? _selectedShopVillage : '',
+      'shopAddress': _hasPhysicalShop ? '${_shopDoorStreetController.text.trim()}, $_selectedShopVillage, $_selectedShopMandal, $_selectedShopDistrict' : '',
+      'shopGstNumber': _hasPhysicalShop ? _shopGstController.text.trim() : '',
+      'shopFrontPhotoUrl': _hasPhysicalShop && _shopFrontPhotoUploaded ? 'shop_front_photo.jpg' : null,
+      'shopInsidePhotoUrl': _hasPhysicalShop && _shopInsidePhotoUploaded ? 'shop_inside_photo.jpg' : null,
+      'category': _selectedCategory,
+      'serviceName': _serviceNameController.text.trim(),
+      'experience': _selectedExperience,
+      'workingHours': _selectedWorkingHours,
+      'serviceRadius': _selectedServiceRadius,
+      'aadhaarNumber': _aadhaarController.text.trim(),
+      'aadhaarFrontUrl': 'verified_aadhaar_front.jpg',
+      'aadhaarBackUrl': 'verified_aadhaar_back.jpg',
+      'panNumber': _panNumberController.text.trim(),
+      'panCardUrl': 'verified_pan_card.jpg',
+      'drivingLicenseNumber': _drivingLicenseController.text.trim(),
+      'drivingLicenseUrl': 'verified_driving_license.jpg',
+      'skillCertificates': _skillCertificatesController.text.trim(),
+      'skillCertificatesUrl': 'verified_trade_certificate.pdf',
+      'livePhotoVerificationStatus': 'Verified',
+      'guarantorName': _guarantorNameController.text.trim(),
+      'guarantorRelation': _guarantorRelationController.text.trim(),
+      'guarantorPhone': _guarantorPhoneController.text.trim(),
+      'upiId': _upiController.text.trim(),
+      'isProfileComplete': true,
+    };
+
+    final updated = await _api.updateProfile(payload);
+
+    setState(() => _isLoading = false);
+
+    if (updated['success'] == true) {
+      if (!mounted) return;
+      widget.onProfileUpdated?.call();
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          contentPadding: const EdgeInsets.all(24),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 68,
+                height: 68,
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.check_circle_rounded, color: Colors.green, size: 48),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Technician Profile Saved Successfully!',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF192338)),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'All personal details, KYC identity cards, live photo verification, guarantor reference, and service radius have been securely saved and submitted for verification.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 13, color: Color(0xFF64748B), height: 1.4),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: PartnerConstants.primary,
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('GO TO DASHBOARD', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(updated['message'] ?? 'Failed to update profile'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  void _showMockUploadDialog(String documentName, VoidCallback onUploaded) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const Icon(Icons.cloud_upload_outlined, color: PartnerConstants.primary),
+            const SizedBox(width: 8),
+            Expanded(child: Text(documentName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+          ],
+        ),
+        content: Text(
+          'Select or capture clear photo of $documentName for automated OCR and admin KYC approval.',
+          style: const TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('CANCEL', style: TextStyle(color: Color(0xFF64748B))),
+          ),
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: PartnerConstants.primary,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () {
+              Navigator.pop(ctx);
+              onUploaded();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('$documentName uploaded successfully!'), backgroundColor: Colors.green),
+              );
+            },
+            icon: const Icon(Icons.check, size: 16, color: Colors.white),
+            label: const Text('ATTACH FILE', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: PartnerConstants.backgroundLight,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: Color(0xFF192338)),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Technician Profile & KYC',
+          style: TextStyle(color: Color(0xFF192338), fontWeight: FontWeight.bold, fontSize: 17),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        child: Column(
+          children: [
+            // TOP HEADER: AVATAR & LIVE PHOTO VERIFICATION CARD
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 12, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 46,
+                        backgroundColor: PartnerConstants.primary.withOpacity(0.12),
+                        child: const Icon(Icons.person, size: 56, color: PartnerConstants.primary),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(7),
+                          decoration: BoxDecoration(
+                            color: PartnerConstants.primary,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          child: const Icon(Icons.camera_alt_rounded, size: 15, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    _nameController.text.isNotEmpty ? _nameController.text : 'Technician Specialist',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF192338)),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _serviceNameController.text.isNotEmpty ? _serviceNameController.text : 'Certified Partner',
+                    style: const TextStyle(fontSize: 13, color: Color(0xFF64748B), fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 14),
+
+                  // LIVE PHOTO VERIFICATION BADGE
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: _livePhotoVerified ? const Color(0xFFECFDF5) : const Color(0xFFFFFBEB),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: _livePhotoVerified ? const Color(0xFFA7F3D0) : const Color(0xFFFDE68A),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          _livePhotoVerified ? Icons.verified_user_rounded : Icons.pending_actions_rounded,
+                          color: _livePhotoVerified ? const Color(0xFF059669) : const Color(0xFFD97706),
+                          size: 22,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _livePhotoVerified ? 'Live Photo Verification: Verified' : 'Live Photo Verification: Pending',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: _livePhotoVerified ? const Color(0xFF065F46) : const Color(0xFF92400E),
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _livePhotoVerified ? 'AI facial match confirmed with Aadhaar ID' : 'Selfie capture required for activation',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: _livePhotoVerified ? const Color(0xFF047857) : const Color(0xFFB45309),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() => _livePhotoVerified = true);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Live photo selfie captured and verified!'), backgroundColor: Colors.green),
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            minimumSize: Size.zero,
+                          ),
+                          child: Text(
+                            _livePhotoVerified ? 'RETAKE' : 'CAPTURE',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: _livePhotoVerified ? const Color(0xFF059669) : PartnerConstants.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // SECTION 1: PERSONAL & FAMILY INFORMATION
+            _buildSectionCard(
+              title: '1. Personal & Family Information',
+              icon: Icons.person_outline_rounded,
+              children: [
+                _buildFieldLabel('Full Name (as per Aadhaar Card) *'),
+                _buildTextField(_nameController, 'Enter your full legal name', Icons.badge_outlined),
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFieldLabel("Father's Name *"),
+                          _buildTextField(_fatherNameController, "Father's full name", Icons.person_outline),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFieldLabel("Mother's Name *"),
+                          _buildTextField(_motherNameController, "Mother's full name", Icons.person_outline),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFieldLabel('Date of Birth (DOB) *'),
+                          GestureDetector(
+                            onTap: _selectDateOfBirth,
+                            child: AbsorbPointer(
+                              child: _buildTextField(_dobController, 'DD/MM/YYYY', Icons.calendar_month_outlined),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFieldLabel('Age *'),
+                          _buildTextField(_ageController, 'Years', Icons.cake_outlined, keyboardType: TextInputType.number),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                _buildFieldLabel('Registered Mobile Number'),
+                _buildTextField(_phoneController, 'Mobile number', Icons.phone_android_rounded, readOnly: true),
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFieldLabel('Emergency Contact Number *'),
+                          _buildTextField(_emergencyContactController, '10-digit number', Icons.contact_phone_outlined, keyboardType: TextInputType.phone),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFieldLabel('Relation'),
+                          _buildTextField(_emergencyRelationController, 'e.g. Spouse / Brother', Icons.family_restroom_outlined),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                _buildFieldLabel('Email Address (Optional)'),
+                _buildTextField(_emailController, 'partner@example.com', Icons.email_outlined),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // SECTION 2: CURRENT RESIDENTIAL ADDRESS
+            _buildSectionCard(
+              title: '2. Current Residential & Base Address',
+              icon: Icons.home_outlined,
+              children: [
+                _buildFieldLabel('Operating District *'),
+                _buildDropdownField(
+                  value: _selectedDistrict,
+                  items: _districts,
+                  onChanged: (val) {
+                    if (val != null && val != _selectedDistrict) {
+                      setState(() {
+                        _selectedDistrict = val;
+                        final mandals = _getMandalsForDistrict(val);
+                        _selectedMandal = mandals.isNotEmpty ? mandals.first : '';
+                        final villages = _getVillagesForMandal(val, _selectedMandal);
+                        _selectedVillage = villages.isNotEmpty ? villages.first : '';
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFieldLabel('Mandalam / Municipality *'),
+                          _buildDropdownField(
+                            value: _selectedMandal,
+                            items: _getMandalsForDistrict(_selectedDistrict),
+                            onChanged: (val) {
+                              if (val != null && val != _selectedMandal) {
+                                setState(() {
+                                  _selectedMandal = val;
+                                  final villages = _getVillagesForMandal(_selectedDistrict, val);
+                                  _selectedVillage = villages.isNotEmpty ? villages.first : '';
+                                });
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFieldLabel('Village / Landmark *'),
+                          _buildDropdownField(
+                            value: _selectedVillage,
+                            items: _getVillagesForMandal(_selectedDistrict, _selectedMandal),
+                            onChanged: (val) {
+                              if (val != null) {
+                                setState(() => _selectedVillage = val);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                _buildFieldLabel('House / Flat No., Building & Street *'),
+                _buildTextField(
+                  _doorStreetController,
+                  'House/Flat No, Building, Colony Street',
+                  Icons.location_city_outlined,
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 12),
+
+                _buildFieldLabel('Postal Pincode *'),
+                _buildTextField(_pincodeController, '6-digit postal code', Icons.pin_drop_outlined, keyboardType: TextInputType.number),
+                const SizedBox(height: 16),
+
+                // PHYSICAL SHOP / WORKSHOP CHECKBOX
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _hasPhysicalShop ? const Color(0xFFEFF6FF) : const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: _hasPhysicalShop ? PartnerConstants.primary : const Color(0xFFCBD5E1),
+                      width: _hasPhysicalShop ? 1.5 : 1,
+                    ),
+                  ),
+                  child: CheckboxListTile(
+                    contentPadding: EdgeInsets.zero,
+                    value: _hasPhysicalShop,
+                    activeColor: PartnerConstants.primary,
+                    controlAffinity: ListTileControlAffinity.leading,
+                    title: const Text(
+                      'I have a Physical Shop / Workshop / Service Center',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF192338)),
+                    ),
+                    subtitle: const Text(
+                      'Check this if customers can visit your shop or drop appliances/items for service',
+                      style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                    ),
+                    onChanged: (val) {
+                      setState(() => _hasPhysicalShop = val ?? false);
+                    },
+                  ),
+                ),
+
+                // CONDITIONAL SHOP ADDRESS & PHOTO UPLOAD FIELDS
+                if (_hasPhysicalShop) ...[
+                  const SizedBox(height: 14),
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF8FAFC),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFF93C5FD)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(Icons.storefront_rounded, color: PartnerConstants.primary, size: 18),
+                            SizedBox(width: 8),
+                            Text(
+                              'Shop Details & Photo Attachments',
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF192338)),
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 20, color: Color(0xFFE2E8F0)),
+                        _buildFieldLabel('Shop / Workshop Trade Name *'),
+                        _buildTextField(_shopNameController, 'e.g. Ramesh Electrical & Hardware Store', Icons.store_outlined),
+                        const SizedBox(height: 12),
+
+                        _buildFieldLabel('Shop District *'),
+                        _buildDropdownField(
+                          value: _selectedShopDistrict,
+                          items: _districts,
+                          onChanged: (val) {
+                            if (val != null && val != _selectedShopDistrict) {
+                              setState(() {
+                                _selectedShopDistrict = val;
+                                final mandals = _getMandalsForDistrict(val);
+                                _selectedShopMandal = mandals.isNotEmpty ? mandals.first : '';
+                                final villages = _getVillagesForMandal(val, _selectedShopMandal);
+                                _selectedShopVillage = villages.isNotEmpty ? villages.first : '';
+                              });
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 12),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildFieldLabel('Shop Mandalam *'),
+                                  _buildDropdownField(
+                                    value: _selectedShopMandal,
+                                    items: _getMandalsForDistrict(_selectedShopDistrict),
+                                    onChanged: (val) {
+                                      if (val != null && val != _selectedShopMandal) {
+                                        setState(() {
+                                          _selectedShopMandal = val;
+                                          final villages = _getVillagesForMandal(_selectedShopDistrict, val);
+                                          _selectedShopVillage = villages.isNotEmpty ? villages.first : '';
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildFieldLabel('Shop Village / Landmark *'),
+                                  _buildDropdownField(
+                                    value: _selectedShopVillage,
+                                    items: _getVillagesForMandal(_selectedShopDistrict, _selectedShopMandal),
+                                    onChanged: (val) {
+                                      if (val != null) {
+                                        setState(() => _selectedShopVillage = val);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+
+                        _buildFieldLabel('Shop Door / Unit No., Complex & Street *'),
+                        _buildTextField(
+                          _shopDoorStreetController,
+                          'Shop No., Building Floor, Complex, Market Road',
+                          Icons.location_on_outlined,
+                          maxLines: 2,
+                        ),
+                        const SizedBox(height: 12),
+
+                        _buildFieldLabel('Trade License / GSTIN (Optional)'),
+                        _buildTextField(_shopGstController, 'Registration / trade license number', Icons.receipt_long_outlined),
+                        const SizedBox(height: 14),
+
+                        _buildFieldLabel('Shop Photos (Front Signboard & Inside View) *'),
+                        _buildDocUploadCard(
+                          title: 'Shop Front / Nameboard Photo',
+                          isUploaded: _shopFrontPhotoUploaded,
+                          onUpload: () => _showMockUploadDialog('Shop Front / Nameboard Photo', () {
+                            setState(() => _shopFrontPhotoUploaded = true);
+                          }),
+                        ),
+                        const SizedBox(height: 10),
+                        _buildDocUploadCard(
+                          title: 'Shop Inside / Work Area Photo',
+                          isUploaded: _shopInsidePhotoUploaded,
+                          onUpload: () => _showMockUploadDialog('Shop Inside / Work Area Photo', () {
+                            setState(() => _shopInsidePhotoUploaded = true);
+                          }),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // SECTION 3: WORKING HOURS & SERVICE RADIUS
+            _buildSectionCard(
+              title: '3. Work Schedule & Service Radius',
+              icon: Icons.access_time_rounded,
+              children: [
+                _buildFieldLabel('Working Hours / Shift Preference *'),
+                _buildDropdownField(
+                  value: _selectedWorkingHours,
+                  items: _workingHoursOptions,
+                  onChanged: (val) {
+                    if (val != null) setState(() => _selectedWorkingHours = val);
+                  },
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Choose whether you want Full-Time dispatch (9:00 AM - 6:00 PM) or Part-Time flexible jobs.',
+                  style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                ),
+                const SizedBox(height: 14),
+
+                _buildFieldLabel('Operating Service Radius *'),
+                _buildDropdownField(
+                  value: _selectedServiceRadius,
+                  items: _serviceRadiusOptions,
+                  onChanged: (val) {
+                    if (val != null) setState(() => _selectedServiceRadius = val);
+                  },
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Orders outside this radius from your live location will not be assigned to you.',
+                  style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // SECTION 4: SERVICE SPECIALTY & PROFESSION
+            _buildSectionCard(
+              title: '4. Service Profession & Specialty',
+              icon: Icons.construction_rounded,
+              children: [
+                _buildFieldLabel('Primary Service Category *'),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFCBD5E1)),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedCategory,
+                      isExpanded: true,
+                      style: const TextStyle(fontSize: 14, color: Color(0xFF192338), fontWeight: FontWeight.w600),
+                      items: _categories.map((c) {
+                        return DropdownMenuItem<String>(
+                          value: c['id'],
+                          child: Text(c['name']!),
+                        );
+                      }).toList(),
+                      onChanged: (val) {
+                        if (val != null) setState(() => _selectedCategory = val);
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                _buildFieldLabel('Specialty Designation / Title *'),
+                _buildTextField(_serviceNameController, 'e.g. Master Plumber / Senior AC Wireman', Icons.work_outline),
+                const SizedBox(height: 12),
+
+                _buildFieldLabel('Years of Professional Experience *'),
+                _buildDropdownField(
+                  value: _selectedExperience,
+                  items: _experienceOptions,
+                  onChanged: (val) {
+                    if (val != null) setState(() => _selectedExperience = val);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // SECTION 5: KYC GOVERNMENT ID CARDS & PHOTO UPLOADS
+            _buildSectionCard(
+              title: '5. KYC Identity & Government Cards',
+              icon: Icons.security_rounded,
+              children: [
+                // AADHAAR CARD
+                _buildFieldLabel('Aadhaar Card Number (12 Digits) *'),
+                _buildTextField(_aadhaarController, 'XXXX-XXXX-XXXX', Icons.fingerprint_rounded, keyboardType: TextInputType.number),
+                const SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildDocUploadCard(
+                        title: 'Aadhaar Front Side',
+                        isUploaded: _aadhaarFrontUploaded,
+                        onUpload: () => _showMockUploadDialog('Aadhaar Front Side', () {
+                          setState(() => _aadhaarFrontUploaded = true);
+                        }),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _buildDocUploadCard(
+                        title: 'Aadhaar Back Side',
+                        isUploaded: _aadhaarBackUploaded,
+                        onUpload: () => _showMockUploadDialog('Aadhaar Back Side', () {
+                          setState(() => _aadhaarBackUploaded = true);
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // PAN CARD
+                _buildFieldLabel('PAN Card Number (10 Characters) *'),
+                _buildTextField(_panNumberController, 'ABCDE1234F', Icons.credit_card_rounded),
+                const SizedBox(height: 10),
+                _buildDocUploadCard(
+                  title: 'PAN Card Photo Document',
+                  isUploaded: _panCardUploaded,
+                  onUpload: () => _showMockUploadDialog('PAN Card Photo Document', () {
+                    setState(() => _panCardUploaded = true);
+                  }),
+                ),
+                const SizedBox(height: 16),
+
+                // DRIVING LICENSE
+                _buildFieldLabel('Driving License Number *'),
+                _buildTextField(_drivingLicenseController, 'e.g. TS09 20210001234', Icons.drive_eta_rounded),
+                const SizedBox(height: 10),
+                _buildDocUploadCard(
+                  title: 'Driving License Document Copy',
+                  isUploaded: _drivingLicenseUploaded,
+                  onUpload: () => _showMockUploadDialog('Driving License Document Copy', () {
+                    setState(() => _drivingLicenseUploaded = true);
+                  }),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // SECTION 6: SKILL CERTIFICATES & TRADE QUALIFICATIONS
+            _buildSectionCard(
+              title: '6. Skill & Trade Certifications',
+              icon: Icons.card_membership_rounded,
+              children: [
+                _buildFieldLabel('Trade Certificate / Technical Qualification Title *'),
+                _buildTextField(
+                  _skillCertificatesController,
+                  'e.g. ITI Electrician Certificate / Wireman License',
+                  Icons.workspace_premium_outlined,
+                ),
+                const SizedBox(height: 10),
+                _buildDocUploadCard(
+                  title: 'Upload Skill / Trade Certificate Proof',
+                  isUploaded: _skillCertificateUploaded,
+                  onUpload: () => _showMockUploadDialog('Skill / Trade Certificate Proof', () {
+                    setState(() => _skillCertificateUploaded = true);
+                  }),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // SECTION 7: LOCAL GUARANTOR & REFERENCE
+            _buildSectionCard(
+              title: '7. Local Guarantor / Reference Verification',
+              icon: Icons.handshake_outlined,
+              children: [
+                _buildFieldLabel('Guarantor / Reference Full Name *'),
+                _buildTextField(_guarantorNameController, 'Name of local guarantor or contractor', Icons.person_outline),
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFieldLabel('Relationship *'),
+                          _buildTextField(_guarantorRelationController, 'e.g. Contractor / Uncle', Icons.group_outlined),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFieldLabel('Guarantor Mobile Number *'),
+                          _buildTextField(_guarantorPhoneController, '10-digit mobile number', Icons.phone_outlined, keyboardType: TextInputType.phone),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // SECTION 8: BANK UPI PAYOUT
+            _buildSectionCard(
+              title: '8. Daily Earnings Payout Account',
+              icon: Icons.account_balance_wallet_outlined,
+              children: [
+                _buildFieldLabel('UPI ID for Instant Daily Bank Payouts *'),
+                _buildTextField(_upiController, 'e.g. 9876522222@ybl / PhonePe / GPay', Icons.payments_outlined),
+                const SizedBox(height: 6),
+                const Text(
+                  'Daily earnings after 90% payout guarantee will be settled directly to this UPI ID.',
+                  style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // SUBMIT BUTTON
+            SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: PartnerConstants.primary,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                ),
+                onPressed: _isLoading ? null : _handleSaveProfile,
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.save_rounded, color: Colors.white, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            'SAVE & SUBMIT TECHNICIAN PROFILE',
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 0.5),
+                          ),
+                        ],
+                      ),
+              ),
+            ),
+            const SizedBox(height: 36),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionCard({required String title, required IconData icon, required List<Widget> children}) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 3)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: PartnerConstants.primary.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: PartnerConstants.primary, size: 18),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF192338)),
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 22, color: Color(0xFFF1F5F9)),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFieldLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Text(
+        label,
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF475569)),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hint,
+    IconData icon, {
+    bool readOnly = false,
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+  }) {
+    return TextField(
+      controller: controller,
+      readOnly: readOnly,
+      keyboardType: keyboardType,
+      maxLines: maxLines,
+      style: const TextStyle(fontSize: 14, color: Color(0xFF192338)),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+        prefixIcon: Icon(icon, size: 18, color: const Color(0xFF94A3B8)),
+        filled: true,
+        fillColor: readOnly ? const Color(0xFFF1F5F9) : const Color(0xFFF8FAFC),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFFCBD5E1))),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFFCBD5E1))),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: PartnerConstants.primary, width: 1.5)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      ),
+    );
+  }
+
+  Widget _buildDropdownField({
+    required String value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    final effectiveValue = items.contains(value) ? value : (items.isNotEmpty ? items.first : null);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFCBD5E1)),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: effectiveValue,
+          isExpanded: true,
+          style: const TextStyle(fontSize: 13, color: Color(0xFF192338), fontWeight: FontWeight.w600),
+          items: items.map((item) {
+            return DropdownMenuItem<String>(
+              value: item,
+              child: Text(
+                item,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDocUploadCard({
+    required String title,
+    required bool isUploaded,
+    required VoidCallback onUpload,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: isUploaded ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: isUploaded ? const Color(0xFF86EFAC) : const Color(0xFFCBD5E1)),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            isUploaded ? Icons.task_alt_rounded : Icons.upload_file_rounded,
+            color: isUploaded ? Colors.green : const Color(0xFF94A3B8),
+            size: 20,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: isUploaded ? const Color(0xFF166534) : const Color(0xFF334155)),
+                ),
+                Text(
+                  isUploaded ? 'Document Attached (Verified)' : 'Upload PDF or JPG Photo',
+                  style: TextStyle(fontSize: 10, color: isUploaded ? const Color(0xFF15803D) : const Color(0xFF64748B)),
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: onUpload,
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              minimumSize: Size.zero,
+            ),
+            child: Text(
+              isUploaded ? 'REPLACE' : 'UPLOAD',
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: isUploaded ? Colors.green : PartnerConstants.primary),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

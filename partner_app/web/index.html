@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="partner_app">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>partner_app</title>
+  <link rel="manifest" href="manifest.json">
+  <script>
+    var _lokiAudioCtx = null;
+    var _lokiSirenTimer = null;
+    var _lokiSirenActive = false;
+
+    function getLokiAudioContext() {
+      if (!_lokiAudioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          _lokiAudioCtx = new AudioContext();
+        }
+      }
+      if (_lokiAudioCtx && _lokiAudioCtx.state === 'suspended') {
+        _lokiAudioCtx.resume();
+      }
+      return _lokiAudioCtx;
+    }
+
+    ['click', 'touchstart', 'keydown'].forEach(function(evt) {
+      window.addEventListener(evt, function unlockAudio() {
+        getLokiAudioContext();
+      });
+    });
+
+    // High-decibel piercing motorcycle traffic emergency siren blast
+    function playSingleBikeSirenBlast() {
+      try {
+        const ctx = getLokiAudioContext();
+        if (!ctx) return;
+
+        // Dynamics Compressor to boost loudness without speaker clipping
+        const compressor = ctx.createDynamicsCompressor();
+        compressor.threshold.setValueAtTime(-10, ctx.currentTime);
+        compressor.knee.setValueAtTime(30, ctx.currentTime);
+        compressor.ratio.setValueAtTime(18, ctx.currentTime);
+        compressor.attack.setValueAtTime(0.001, ctx.currentTime);
+        compressor.release.setValueAtTime(0.15, ctx.currentTime);
+        compressor.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+
+        // 1. Sharp Sawtooth Siren Wave (Emergency horn sweep 950Hz -> 2800Hz)
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'sawtooth';
+        osc1.frequency.setValueAtTime(950, now);
+        osc1.frequency.exponentialRampToValueAtTime(2600, now + 0.22);
+        osc1.frequency.exponentialRampToValueAtTime(1100, now + 0.45);
+        osc1.frequency.exponentialRampToValueAtTime(2800, now + 0.68);
+        osc1.frequency.exponentialRampToValueAtTime(900, now + 0.88);
+        gain1.gain.setValueAtTime(0.9, now);
+        gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.90);
+        osc1.connect(gain1);
+        gain1.connect(compressor);
+        osc1.start(now);
+        osc1.stop(now + 0.90);
+
+        // 2. High-cut piercing Square Wave sub-octave horn
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'square';
+        osc2.frequency.setValueAtTime(1400, now);
+        osc2.frequency.setValueAtTime(1850, now + 0.22);
+        osc2.frequency.setValueAtTime(1400, now + 0.45);
+        osc2.frequency.setValueAtTime(1950, now + 0.68);
+        gain2.gain.setValueAtTime(0.6, now);
+        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.90);
+        osc2.connect(gain2);
+        gain2.connect(compressor);
+        osc2.start(now);
+        osc2.stop(now + 0.90);
+
+        // 3. Repeating phone vibration pulse for pocket alert
+        if (navigator.vibrate) {
+          navigator.vibrate([400, 100, 400, 100]);
+        }
+      } catch (e) {
+        console.warn('Bike siren audio error:', e);
+      }
+    }
+
+    // Continuous Repeating Bike Traffic Siren (loops until driver accepts/cancels)
+    window.playLokiPartnerAlarm = function() {
+      window.stopLokiPartnerAlarm();
+      _lokiSirenActive = true;
+      playSingleBikeSirenBlast();
+      _lokiSirenTimer = setInterval(function() {
+        if (!_lokiSirenActive) {
+          clearInterval(_lokiSirenTimer);
+          return;
+        }
+        playSingleBikeSirenBlast();
+      }, 1050);
+
+      // Auto stop after 45 seconds timeout to save battery if ignored
+      setTimeout(function() {
+        window.stopLokiPartnerAlarm();
+      }, 45000);
+    };
+
+    window.stopLokiPartnerAlarm = function() {
+      _lokiSirenActive = false;
+      if (_lokiSirenTimer) {
+        clearInterval(_lokiSirenTimer);
+        _lokiSirenTimer = null;
+      }
+      if (navigator.vibrate) {
+        navigator.vibrate(0);
+      }
+    };
+  </script>
+</head>
+<body>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

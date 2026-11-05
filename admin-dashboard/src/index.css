@@ -1,0 +1,173 @@
+:root {
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+  /* Locki Brand Design Tokens - Clean Light Theme */
+  --brand-orange: #DE4915;
+  --brand-orange-dark: #B8350B;
+  --brand-orange-light: #FF6D3A;
+  --brand-orange-tint: #FFF4EF;
+  --brand-navy: #192338;
+  --brand-navy-light: #24324D;
+  --brand-cream: #FAF7F2;
+
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8FAFC;
+  
+  --primary: #DE4915;
+  --primary-glow: rgba(222, 73, 21, 0.25);
+  --primary-dark: #B8350B;
+  --primary-light: #FF6D3A;
+
+  --accent-gold: #D97706;
+  --accent-emerald: #059669;
+  --accent-purple: #7C3AED;
+  --accent-rose: #DC2626;
+  --accent-cyan: #0891B2;
+
+  --text-main: #192338;
+  --text-muted: #64748B;
+  --text-dim: #94A3B8;
+
+  --border: #E2E8F0;
+  --border-active: rgba(222, 73, 21, 0.45);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --shadow-card: 0 4px 20px -2px rgba(25, 35, 56, 0.05), 0 0 1px 1px rgba(25, 35, 56, 0.04);
+  --shadow-glow: 0 4px 18px rgba(222, 73, 21, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 10% 8%, rgba(222, 73, 21, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(25, 35, 56, 0.03) 0%, transparent 40%);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+input, select, textarea {
+  font-family: var(--font-body);
+}
+
+/* Glassmorphism / Clean Card Classes */
+.glass-panel {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.glass-panel:hover {
+  border-color: #CBD5E1;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge-success {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+.badge-warning {
+  background: #FFFBEB;
+  color: #D97706;
+  border: 1px solid #FDE68A;
+}
+.badge-info {
+  background: #FFF4EF;
+  color: #DE4915;
+  border: 1px solid rgba(222, 73, 21, 0.25);
+}
+.badge-danger {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+}
+.badge-purple {
+  background: #F5F3FF;
+  color: #7C3AED;
+  border: 1px solid #DDD6FE;
+}
+
+/* Live Pulse Animation */
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 0.2; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  position: relative;
+}
+
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  border: 2px solid #10b981;
+  animation: pulse-ring 2s infinite ease-in-out;
+}
